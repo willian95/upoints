@@ -17,7 +17,6 @@
                     <p class="error">
                         {{ errorMessage }}
                     </p>
-                    <p>Decoded: {{ decodedContent }}</p>
                     <!--<button @click="onDecode('345434545-williancliente')">test</button>-->
                     <no-ssr>
                         <vue-qr-reader class="w-100" v-if="points != '' && points > 0" v-on:code-scanned="codeArrived" v-on:error-captured="errorCaptured" :responsive="true" line-color="#FFFFFF" stop-on-scanned="false"></vue-qr-reader>
@@ -61,9 +60,9 @@
         },
         methods:{
             codeArrived(event) {
-                console.log("eventos", event)
-                /*this.decodedContent = event.detail[0]
-                let splittedContent = content.split("-")
+               
+                this.decodedContent = event
+                let splittedContent = event.split("-")
                 let userIdentification = splittedContent[0]
                 let nickname = splittedContent[1]
 
@@ -79,7 +78,7 @@
                     if (result.isConfirmed) {
                         this.updateUserPoints(userIdentification)
                     }
-                })*/
+                })
             },
             async updateUserPoints(userIdentification){
 
