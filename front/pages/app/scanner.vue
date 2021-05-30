@@ -20,7 +20,7 @@
                     <p>Decoded: {{ decodedContent }}</p>
                     <!--<button @click="onDecode('345434545-williancliente')">test</button>-->
                     <client-only>
-                        <qrcode-stream v-if="points != '' && points > 0" @decode="onDecode" @init="onInit"></qrcode-stream>
+                        <vue-qr-reader v-if="points != '' && points > 0" v-on:code-scanned="codeArrived" v-on:error-captured="errorCaptured"></vue-qr-reader>
                         <p v-else>Para continuar debes agregar puntos a asignar</p>
                     </client-only>
 
@@ -34,9 +34,13 @@
 </template>
 
 <script>
+    import VueQrReader from 'vue-qr-reader/dist/lib/vue-qr-reader.umd.js';
     export default {
         middleware:"auth",
         auth:"auth",
+        components: {
+        'vue-qr-reader': () => process.browser ? import('vue-qr-reader/dist/lib/vue-qr-reader.umd.js') : null
+        },
         data(){
             return{
                 decodedContent: '',
@@ -54,8 +58,8 @@
             }
         },
         methods:{
-            onDecode(content) {
-                this.decodedContent = content
+            codeArrived(event) {
+                this.decodedContent = event.detail[0]
                 let splittedContent = content.split("-")
                 let userIdentification = splittedContent[0]
                 let nickname = splittedContent[1]
@@ -102,25 +106,27 @@
                 }
 
             },
-            onInit(promise) {
-                promise.then(() => {
-                    console.log('Successfully initilized! Ready for scanning now!')
-                })
-                    .catch(error => {
-                    if (error.name === 'NotAllowedError') {
-                    this.errorMessage = 'Hey! I need access to your camera'
-                    } else if (error.name === 'NotFoundError') {
-                    this.errorMessage = 'Do you even have a camera on your device?'
-                    } else if (error.name === 'NotSupportedError') {
-                    this.errorMessage = 'Seems like this page is served in non-secure context (HTTPS, localhost or file://)'
-                    } else if (error.name === 'NotReadableError') {
+            errorCaptured(error) {
+                switch (error.name) {
+                    case 'NotAllowedError':
+                    this.errorMessage = 'Camera permission denied.'
+                    break;
+                    case 'NotFoundError':
+                    this.errorMessage = 'There is no connected camera.'
+                    break;
+                    case 'NotSupportedError':
+                    this.errorMessage = 'Seems like this page is served in non-secure context.'
+                    break;
+                    case 'NotReadableError':
                     this.errorMessage = 'Couldn\'t access your camera. Is it already in use?'
-                    } else if (error.name === 'OverconstrainedError') {
-                    this.errorMessage = 'Constraints don\'t match any installed camera. Did you asked for the front camera although there is none?'
-                    } else {
+                    break;
+                    case 'OverconstrainedError':
+                    this.errorMessage = 'Constraints don\'t match any installed camera.'
+                    break;
+                    default:
                     this.errorMessage = 'UNKNOWN ERROR: ' + error.message
-                    }
-                })
+                }
+                console.error(this.errorMessage);
             }
         }
     }
