@@ -59,7 +59,7 @@
 											<!--end::Item-->
 
 											<!--begin::Item-->
-											<li class="menu-item" @click="toggleNavbar()">
+											<li class="menu-item" @click="signOut()">
 												<a href="#" class="menu-link menu-toggle" data-toggle="tab" data-target="#kt_aside_tab_4" role="tab" >
 													<fa icon="sign-out-alt" class="mr-1" style="font-size: 20px;"></fa>
 													<span class="menu-text">Cerrar sesión</span>
@@ -143,6 +143,10 @@
 				
 				this.openSidebar == true ? this.openSidebar = false : this.openSidebar = true 
 
+			},
+			async signOut(){
+				await this.$auth.logout()
+				this.$auth.redirect('login')
 			}
 		}
 	}
