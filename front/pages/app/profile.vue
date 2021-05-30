@@ -20,7 +20,7 @@
                         <div v-if="$auth.user.role_id == 2" class="col-md-6">
                              <p class="text-center">Mi QR</p>
                             <p class="text-center">
-                                <vue-qr :text="$auth.user.user_identification" style="width: 100px;"></vue-qr>
+                                <vue-qr :text="$auth.user.user_identification+'-'+$auth.user.nickname" style="width: 100px;"></vue-qr>
                             </p>
                         </div>
                     </div>

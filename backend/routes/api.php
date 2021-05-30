@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PointsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,5 +33,7 @@ Route::group([
     Route::post('logout', [LoginController::class, 'logout']);
     Route::post('refresh', [LoginController::class, 'refresh']);
     Route::get('user', [LoginController::class, 'me']);
+
+    Route::post("points/assignment", [PointsController::class, 'assignment']);
 
 });

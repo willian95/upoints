@@ -9,7 +9,7 @@
 					<div class="card-body my-3">
 						<a href="#" class="card-title font-weight-bolder text-success text-hover-state-dark font-size-h6 mb-4 d-block">Puntos acumulados</a>
 						<div class="font-weight-bold text-muted font-size-sm">
-							<span class="text-dark-75 font-size-h2 font-weight-bolder mr-2">0</span>puntos
+							<span class="text-dark-75 font-size-h2 font-weight-bolder mr-2">{{ $auth.user.points }}</span>puntos
 						</div>
 					</div>
 					<!--end:: Body-->
@@ -49,14 +49,14 @@
 					<div class="card-body">
 						<a href="#" class="card-title font-weight-bolder text-success text-hover-state-dark font-size-h6 mb-4 d-block">Mi QR</a>
 						<p class="text-center">
-							<vue-qr :text="$auth.user.user_identification" style="width: 100px;"></vue-qr>
+							<vue-qr :text="$auth.user.user_identification+'-'+$auth.user.nickname" style="width: 100%;"></vue-qr>
 						</p>
 					</div>
 					<!--end:: Body-->
 				</div>
 				
 			</div>
-			<div class="col-md-8" v-if="$auth.user.role_id == 2">
+			<div class="col-md-8">
 				<client-only>
 					<div class="card" style="max-height: 350px; overflow-y: auto">
 						<div class="card-body">

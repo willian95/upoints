@@ -9,19 +9,19 @@
                 
                 <div class="card-body">
                     
-                    <div class="form-group px-custom">
+                    <div class="form-group">
                         <label for="">Cantidad de puntos a otorgar</label>
                         <input class="form-control fs-custom" v-model="points" @keypress="isNumber($event)">
                     </div>
-                    
-                    <p>
-                        Last result: <b>{{ decodedContent }}</b>
-                    </p>
 
                     <p class="error">
                         {{ errorMessage }}
                     </p>
-                    <qrcode-stream @decode="onDecode" @init="onInit"></qrcode-stream>
+                    <!--<button @click="onDecode('345434545-williancliente')">test</button>-->
+                    <client-only>
+                        <qrcode-stream v-if="points != '' && points > 0" @decode="onDecode" @init="onInit"></qrcode-stream>
+                        <p v-else>Para continuar debes agregar puntos a asignar</p>
+                    </client-only>
 
                 </div>
             </div>
@@ -54,9 +54,52 @@
         },
         methods:{
             onDecode(content) {
-            this.decodedContent = content
-            },
+                let splittedContent = content.split("-")
+                let userIdentification = splittedContent[0]
+                let nickname = splittedContent[1]
 
+                this.$swal({
+                    title:"¿Estás seguro?",
+                    text: "Enviarás "+this.points+" puntos a @"+nickname,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, estoy seguro!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.updateUserPoints(userIdentification)
+                    }
+                })
+            },
+            async updateUserPoints(userIdentification){
+
+                let formData = new FormData
+                formData.append("userIdentification", userIdentification)
+                formData.append("points", this.points)
+
+                let res = await this.$axios.post("points/assignment", formData)
+                if(res.data.success == true){
+
+                    this.$swal({
+                        text:res.data.msg,
+                        icon:"success"
+                    }).then(ans => {
+
+                        this.$router.push("/app/dashboard")
+
+                    })
+
+                }else{
+
+                     this.$swal({
+                        text:res.data.msg,
+                        icon:"error"
+                    })
+
+                }
+
+            },
             onInit(promise) {
                 promise.then(() => {
                     console.log('Successfully initilized! Ready for scanning now!')
@@ -90,5 +133,7 @@
         padding-right: 10rem;
         padding-left: 10rem;
     }
+
+    
 </style>
 
