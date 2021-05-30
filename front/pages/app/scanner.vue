@@ -19,10 +19,10 @@
                     </p>
                     <p>Decoded: {{ decodedContent }}</p>
                     <!--<button @click="onDecode('345434545-williancliente')">test</button>-->
-                    <client-only>
-                        <vue-qr-reader v-if="points != '' && points > 0" v-on:code-scanned="codeArrived" v-on:error-captured="errorCaptured"></vue-qr-reader>
+                    <no-ssr>
+                        <vue-qr-reader class="w-100" v-if="points != '' && points > 0" v-on:code-scanned="codeArrived" v-on:error-captured="errorCaptured" :responsive="true" line-color="#FFFFFF" stop-on-scanned="false"></vue-qr-reader>
                         <p v-else>Para continuar debes agregar puntos a asignar</p>
-                    </client-only>
+                    </no-ssr>
 
                 </div>
             </div>
@@ -34,12 +34,14 @@
 </template>
 
 <script>
+    import NoSSR from 'vue-no-ssr'
     import VueQrReader from 'vue-qr-reader/dist/lib/vue-qr-reader.umd.js';
     export default {
         middleware:"auth",
         auth:"auth",
         components: {
-        'vue-qr-reader': () => process.browser ? import('vue-qr-reader/dist/lib/vue-qr-reader.umd.js') : null
+            'no-ssr': NoSSR,
+            VueQrReader
         },
         data(){
             return{
@@ -59,6 +61,7 @@
         },
         methods:{
             codeArrived(event) {
+                console.log("eventos", event.detail[0])
                 this.decodedContent = event.detail[0]
                 let splittedContent = content.split("-")
                 let userIdentification = splittedContent[0]
