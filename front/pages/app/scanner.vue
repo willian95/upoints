@@ -17,6 +17,7 @@
                     <p class="error">
                         {{ errorMessage }}
                     </p>
+                    <p>Decoded: {{ decodedContent }}</p>
                     <!--<button @click="onDecode('345434545-williancliente')">test</button>-->
                     <client-only>
                         <qrcode-stream v-if="points != '' && points > 0" @decode="onDecode" @init="onInit"></qrcode-stream>
@@ -54,6 +55,7 @@
         },
         methods:{
             onDecode(content) {
+                this.decodedContent = content
                 let splittedContent = content.split("-")
                 let userIdentification = splittedContent[0]
                 let nickname = splittedContent[1]
