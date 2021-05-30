@@ -61,8 +61,8 @@
         },
         methods:{
             codeArrived(event) {
-                console.log("eventos", event.detail[0])
-                this.decodedContent = event.detail[0]
+                console.log("eventos", event)
+                /*this.decodedContent = event.detail[0]
                 let splittedContent = content.split("-")
                 let userIdentification = splittedContent[0]
                 let nickname = splittedContent[1]
@@ -79,7 +79,7 @@
                     if (result.isConfirmed) {
                         this.updateUserPoints(userIdentification)
                     }
-                })
+                })*/
             },
             async updateUserPoints(userIdentification){
 
