@@ -125,13 +125,6 @@
                     }
                     if(err.response.data.errors){
 
-                        this.$swal({
-                            icon: 'error',
-                            text: "Hay campos que debes revisar",
-                            toast: true,
-                            position: 'top-end',
-                        })
-
                         this.errors = err.response.data.errors
                     }
                 }
