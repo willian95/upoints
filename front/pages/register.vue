@@ -86,6 +86,8 @@
             },
             async register(){
 
+                this.errors = []
+
                 let formData = new FormData
                 formData.append("nickname", this.nickname)
                 formData.append("role", this.type == "user" ? 2 : 3)
